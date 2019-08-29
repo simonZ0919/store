@@ -4,12 +4,14 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import cn.tedu.store.entity.User;
+import cn.tedu.store.exception.DuplicateKeyException;
 import cn.tedu.store.exception.InsertException;
+import cn.tedu.store.exception.PasswordNotMatchException;
+import cn.tedu.store.exception.UseerNotFoundException;
 import cn.tedu.store.mapper.UserMapper;
 import cn.tedu.store.service.IUserService;
 
@@ -17,6 +19,29 @@ import cn.tedu.store.service.IUserService;
 public class UserServiceImpl implements IUserService {
 
 	@Autowired private UserMapper mapper;
+	
+	@Override
+	public User login(String username, String password) 
+			throws UseerNotFoundException, PasswordNotMatchException {
+		User data=findByUsername(username);
+		if (data == null) {// if user not exist
+			throw new UseerNotFoundException(
+					"username: "+username+" not exist");
+		}
+		String salt=data.getSalt();
+		String md5Pwd=getMd5Password(password, salt);
+		if(data.getPassword().equals(md5Pwd)) {
+			if(data.getIsDelete()==1) {
+				throw new UseerNotFoundException("account has been deleted");
+			}
+			// clear data and return userinfo
+			data.setPassword(null);
+			data.setSalt(null);
+			return data;
+		}else {
+			throw new PasswordNotMatchException("password incorrect");
+		}
+	}	
 	
 	@Override
 	public User reg(User user) throws DuplicateKeyException, InsertException {
