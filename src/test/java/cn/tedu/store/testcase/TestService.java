@@ -22,17 +22,11 @@ public class TestService {
 		try {
 			Date now = new Date();
 			User user = new User();
-			user.setUsername("admin");
+			user.setUsername("spring");
 			user.setPassword("1234");
 			user.setGender(1);
 			user.setPhone("13800138001");
-			user.setEmail("root@tedu.cn");
-			user.setSalt("Hello,MD5!");
-			user.setIsDelete(0);
-			user.setCreatedUser("Admin");
-			user.setModifiedUser("Admin");
-			user.setCreatedTime(now);
-			user.setModifiedTime(now);
+			user.setEmail("spring@tedu.cn");
 			System.out.println(service.reg(user));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
