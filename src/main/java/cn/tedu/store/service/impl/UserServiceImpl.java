@@ -3,6 +3,7 @@ package cn.tedu.store.service.impl;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -11,7 +12,8 @@ import cn.tedu.store.entity.User;
 import cn.tedu.store.exception.DuplicateKeyException;
 import cn.tedu.store.exception.InsertException;
 import cn.tedu.store.exception.PasswordNotMatchException;
-import cn.tedu.store.exception.UseerNotFoundException;
+import cn.tedu.store.exception.UpdateException;
+import cn.tedu.store.exception.UserNotFoundException;
 import cn.tedu.store.mapper.UserMapper;
 import cn.tedu.store.service.IUserService;
 
@@ -22,17 +24,17 @@ public class UserServiceImpl implements IUserService {
 	
 	@Override
 	public User login(String username, String password) 
-			throws UseerNotFoundException, PasswordNotMatchException {
+			throws UserNotFoundException, PasswordNotMatchException {
 		User data=findByUsername(username);
 		if (data == null) {// if user not exist
-			throw new UseerNotFoundException(
+			throw new UserNotFoundException(
 					"username: "+username+" not exist");
 		}
 		String salt=data.getSalt();
 		String md5Pwd=getMd5Password(password, salt);
 		if(data.getPassword().equals(md5Pwd)) {
 			if(data.getIsDelete()==1) {
-				throw new UseerNotFoundException("account has been deleted");
+				throw new UserNotFoundException("account has been deleted");
 			}
 			// clear data and return userinfo
 			data.setPassword(null);
@@ -71,6 +73,31 @@ public class UserServiceImpl implements IUserService {
 		}
 	}
 	
+	@Override
+	public void changePassword(Integer id, String oldPwd, String newPwd)
+			throws UserNotFoundException, PasswordNotMatchException, UpdateException {
+		User data=findById(id);
+		// user not exist
+		if (data == null) {
+			throw new UserNotFoundException("user data not found");
+		}
+		// user deleted
+		if(data.getIsDelete()==1) {
+			throw new UserNotFoundException("user data has been deleted");
+		}
+		String salt=data.getSalt();
+		String oldMd5Pwd=getMd5Password(oldPwd, salt);
+		
+		// check if password match
+		if(data.getPassword().equals(oldMd5Pwd)) {
+			// updatae database
+			String newMd5Pwd=getMd5Password(newPwd, salt);
+			updatePassword(id, newMd5Pwd, data.getUsername(), new Date());
+		}else {
+			throw new PasswordNotMatchException("old password not match");
+		}
+	}
+	
 	private void addNew(User user) {
 		Integer rows=mapper.addnew(user);
 		if(rows!=1) {
@@ -80,6 +107,18 @@ public class UserServiceImpl implements IUserService {
 	
 	private User findByUsername(String username) {
 		return mapper.findByUsername(username);
+	}
+	
+	private User findById(Integer id) {
+		return mapper.findById(id);
+	}
+	
+	private void updatePassword(Integer id,
+		String password, String modifiedUser,Date modifiedTime) {
+		Integer rows=mapper.updatePassword(id, password, modifiedUser, modifiedTime);
+		if (rows!=1) {
+			throw new UpdateException("update password failed");
+		}
 	}
 	
 	// compute key from password and salt

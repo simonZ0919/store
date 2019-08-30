@@ -50,4 +50,16 @@ public class TestDB {
 	public void findByUserName() {
 		System.err.println(mapper.findByUsername("root"));
 	}
+	
+	@Test
+	public void findByID() {
+		System.err.println(mapper.findById(4));
+	}
+	
+	@Test
+	public void updatePassword() {
+		Integer rows=mapper.updatePassword(
+				4, "123", "root", new Date());
+		System.err.println(rows);
+	}
 }
