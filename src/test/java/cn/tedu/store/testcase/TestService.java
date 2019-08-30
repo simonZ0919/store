@@ -20,7 +20,6 @@ public class TestService {
 	@Test
 	public void reg() {
 		try {
-			Date now = new Date();
 			User user = new User();
 			user.setUsername("spring");
 			user.setPassword("1234");
