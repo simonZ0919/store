@@ -174,9 +174,13 @@
 				"datatype" : "json",
 				"success" : function(json) {
 					if (json.state == 200) {
-						alert("user sign in")
+						alert("user sign in ");
+						// store image path to cookie
+						$.cookie("avatar",json.data.avatar,{
+							expires:7
+						})
 					} else {
-						alert(json.message)
+						alert(json.message);
 					}
 				}
 			});

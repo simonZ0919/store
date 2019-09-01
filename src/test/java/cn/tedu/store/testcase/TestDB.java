@@ -53,13 +53,19 @@ public class TestDB {
 	
 	@Test
 	public void findByID() {
-		System.err.println(mapper.findById(4));
+		System.err.println(mapper.findById(1));
 	}
 	
 	@Test
 	public void updatePassword() {
 		Integer rows=mapper.updatePassword(
 				4, "123", "root", new Date());
+		System.err.println(rows);
+	}
+	
+	@Test
+	public void updateAvatar() {
+		Integer rows=mapper.updateAvatar(2, "/a.jpg", "spring", new Date());
 		System.err.println(rows);
 	}
 }

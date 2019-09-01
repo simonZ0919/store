@@ -25,8 +25,11 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 		List<String> excludePath=new ArrayList<>();
 		// add to include/exclude list
 		includePath.add("/user/**");
+		includePath.add("/web/**");
 		excludePath.add("/user/reg.do");
 		excludePath.add("/user/login.do");
+		excludePath.add("/web/login.html");
+		excludePath.add("/web/register.html");
 		
 		// register interceptor
 		registry.addInterceptor(new LoginInterceptor())

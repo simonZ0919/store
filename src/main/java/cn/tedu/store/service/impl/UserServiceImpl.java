@@ -20,114 +20,161 @@ import cn.tedu.store.service.IUserService;
 @Service
 public class UserServiceImpl implements IUserService {
 
-	@Autowired private UserMapper mapper;
-	
+	@Autowired
+	private UserMapper mapper;
+
 	@Override
-	public User login(String username, String password) 
-			throws UserNotFoundException, PasswordNotMatchException {
-		User data=findByUsername(username);
+	public User login(String username, String password) throws UserNotFoundException, PasswordNotMatchException {
+		User data = findByUsername(username);
 		if (data == null) {// if user not exist
-			throw new UserNotFoundException(
-					"username: "+username+" not exist");
+			throw new UserNotFoundException("username: " + username + " not exist");
 		}
-		String salt=data.getSalt();
-		String md5Pwd=getMd5Password(password, salt);
-		if(data.getPassword().equals(md5Pwd)) {
-			if(data.getIsDelete()==1) {
+		String salt = data.getSalt();
+		String md5Pwd = getMd5Password(password, salt);
+		if (data.getPassword().equals(md5Pwd)) {
+			if (data.getIsDelete() == 1) {
 				throw new UserNotFoundException("account has been deleted");
 			}
 			// clear data and return userinfo
 			data.setPassword(null);
 			data.setSalt(null);
 			return data;
-		}else {
+		} else {
 			throw new PasswordNotMatchException("password incorrect");
 		}
-	}	
-	
+	}
+
 	@Override
 	public User reg(User user) throws DuplicateKeyException, InsertException {
-		User data=findByUsername(user.getUsername());
+		User data = findByUsername(user.getUsername());
 		if (data == null) {// if name not used, insert user
 			// set default entries
 			user.setIsDelete(0);
-			Date now=new Date();
+			Date now = new Date();
 			user.setCreatedUser(user.getUsername());
 			user.setModifiedUser(user.getUsername());
 			user.setCreatedTime(now);
 			user.setModifiedTime(now);
-			
+
 			// get password for encrypt
-			String srcPwd=user.getPassword();
-			// get uuid as salt 	
-			String salt=UUID.randomUUID().toString();
-			String md5Password=getMd5Password(srcPwd, salt);
+			String srcPwd = user.getPassword();
+			// get uuid as salt
+			String salt = UUID.randomUUID().toString();
+			String md5Password = getMd5Password(srcPwd, salt);
 			user.setPassword(md5Password);
 			user.setSalt(salt);
-			
+
 			addNew(user);
 			return user;
-		}else {// if user exists, throw exception 
-			throw new DuplicateKeyException(
-					"username: "+user.getUsername()+" has been used");
+		} else {// if user exists, throw exception
+			throw new DuplicateKeyException("username: " + user.getUsername() + " has been used");
 		}
 	}
-	
+
 	@Override
 	public void changePassword(Integer id, String oldPwd, String newPwd)
 			throws UserNotFoundException, PasswordNotMatchException, UpdateException {
-		User data=findById(id);
+		User data = findById(id);
 		// user not exist
 		if (data == null) {
 			throw new UserNotFoundException("user data not found");
 		}
 		// user deleted
-		if(data.getIsDelete()==1) {
+		if (data.getIsDelete() == 1) {
 			throw new UserNotFoundException("user data has been deleted");
 		}
-		String salt=data.getSalt();
-		String oldMd5Pwd=getMd5Password(oldPwd, salt);
-		
+		String salt = data.getSalt();
+		String oldMd5Pwd = getMd5Password(oldPwd, salt);
+
 		// check if password match
-		if(data.getPassword().equals(oldMd5Pwd)) {
+		if (data.getPassword().equals(oldMd5Pwd)) {
 			// updatae database
-			String newMd5Pwd=getMd5Password(newPwd, salt);
+			String newMd5Pwd = getMd5Password(newPwd, salt);
 			updatePassword(id, newMd5Pwd, data.getUsername(), new Date());
-		}else {
+		} else {
 			throw new PasswordNotMatchException("old password not match");
 		}
 	}
-	
-	private void addNew(User user) {
-		Integer rows=mapper.addnew(user);
-		if(rows!=1) {
-			throw new InsertException("unknown system error"); 
+
+	@Override
+	public void changeAvatar(Integer id, String avatar) 
+			throws UserNotFoundException, UpdateException {
+		User data = findById(id);
+		if (data == null) {
+			throw new UserNotFoundException("user data not found");
 		}
+		if (data.getIsDelete() == 1) {
+			throw new UserNotFoundException("user data has been deleted");
+		}
+		updateAvatar(id, avatar, data.getUsername(), new Date());
 	}
 	
+	@Override
+	public void changeInfo(User user) throws UserNotFoundException, UpdateException {
+		User data = findById(user.getId());
+		if (data == null) {
+			throw new UserNotFoundException("user data not found");
+		}
+		if (data.getIsDelete() == 1) {
+			throw new UserNotFoundException("user data has been deleted");
+		}
+
+		user.setModifiedUser(data.getUsername());
+		user.setModifiedTime(new Date());
+		updateInfo(user);
+	}
+	
+	@Override
+	public User getById(Integer id) {
+		User data = findById(id);
+		data.setPassword(null);
+		data.setSalt(null);
+		data.setIsDelete(null);
+		return data;
+	}
+	
+	private void addNew(User user) {
+		Integer rows = mapper.addnew(user);
+		if (rows != 1) {
+			throw new InsertException("unknown system error");
+		}
+	}
+
 	private User findByUsername(String username) {
 		return mapper.findByUsername(username);
 	}
-	
+
 	private User findById(Integer id) {
 		return mapper.findById(id);
 	}
-	
-	private void updatePassword(Integer id,
-		String password, String modifiedUser,Date modifiedTime) {
-		Integer rows=mapper.updatePassword(id, password, modifiedUser, modifiedTime);
-		if (rows!=1) {
+
+	private void updatePassword(Integer id, String password, String modifiedUser, Date modifiedTime) {
+		Integer rows = mapper.updatePassword(id, password, modifiedUser, modifiedTime);
+		if (rows != 1) {
 			throw new UpdateException("update password failed");
 		}
 	}
-	
+
+	private void updateAvatar(Integer id, String avatar, String modifiedUser, Date modifiedTime) {
+		Integer rows = mapper.updateAvatar(id, avatar, modifiedUser, modifiedTime);
+		if (rows != 1) {
+			throw new UpdateException("update avatar failed");
+		}
+	}
+	private void updateInfo(User user) {
+		Integer rows = mapper.updateInfo(user);
+		if (rows != 1) {
+			throw new UpdateException("fail to update user data");
+		}
+	}
+
 	// compute key from password and salt
 	private String getMd5Password(String pwd, String salt) {
 		// concat sat and pwd
-		String output=salt+pwd+salt;
+		String output = salt + pwd + salt;
 		// iterate for 5 times
 		for (int i = 0; i < 5; i++) {
-			output=DigestUtils.md5DigestAsHex(output.getBytes());
+			output = DigestUtils.md5DigestAsHex(output.getBytes());
 		}
 		return output;
 	}

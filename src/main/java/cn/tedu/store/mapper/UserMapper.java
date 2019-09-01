@@ -24,7 +24,7 @@ public interface UserMapper {
 	/**
 	 * find user by id
 	 * @param id
-	 * @return
+	 * @return found user
 	 */
 	User findById(Integer id);
 	
@@ -41,4 +41,25 @@ public interface UserMapper {
 			@Param("password") String password,
 			@Param("modifiedUser") String modifiedUser,
 			@Param("modifiedTime") Date modifiedTime);
+	
+	/**
+	 * update avatar(path of image)
+	 * @param id
+	 * @param avatar
+	 * @param modifiedUser
+	 * @param modifiedTime
+	 * @return affected rows
+	 */
+	Integer updateAvatar(
+			@Param("id") Integer id,
+			@Param("avatar") String avatar,
+			@Param("modifiedUser") String modifiedUser,
+			@Param("modifiedTime") Date modifiedTime);
+	
+	/**
+	 * update user info(exclude password,avatar)
+	 * @param user
+	 * @return affected rows
+	 */
+	Integer updateInfo(User user);
 }

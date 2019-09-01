@@ -11,14 +11,13 @@ import cn.tedu.store.exception.UserNotFoundException;
 public interface IUserService {
 	/**
 	 * user signed in
-	 * @param user 
+	 * @param user
 	 * @return registered user
 	 * @throws DuplicateKeyException
 	 * @throws InsertException
 	 */
-	User reg(User user) throws 
-		DuplicateKeyException, InsertException;
-	
+	User reg(User user) throws DuplicateKeyException, InsertException;
+
 	/**
 	 * user login
 	 * @param username
@@ -27,9 +26,15 @@ public interface IUserService {
 	 * @throws UserNotFoundException
 	 * @throws PasswordNotMatchException
 	 */
-	User login(String username, String password) 
-			throws UserNotFoundException,PasswordNotMatchException;
-	
+	User login(String username, String password) throws UserNotFoundException, PasswordNotMatchException;
+
+	/**
+	 * get user by id
+	 * @param id
+	 * @return user data
+	 */
+	User getById(Integer id);
+
 	/**
 	 * update password
 	 * @param id
@@ -40,5 +45,24 @@ public interface IUserService {
 	 * @throws UpdateException
 	 */
 	void changePassword(Integer id, String oldPwd, String newPwd)
-		throws UserNotFoundException, PasswordNotMatchException, UpdateException;
+			throws UserNotFoundException, PasswordNotMatchException, UpdateException;
+	
+	/**
+	 * update avatar
+	 * @param id
+	 * @param avatar
+	 * @throws UserNotFoundException
+	 * @throws UpdateException
+	 */
+	void changeAvatar(Integer id, String avatar)
+			throws UserNotFoundException, UpdateException;
+	
+	/**
+	 * change user info
+	 * @param user
+	 * @throws UserNotFoundException
+	 * @throws UpdateException
+	 */
+	void changeInfo(User user) throws UserNotFoundException, UpdateException;
+
 }

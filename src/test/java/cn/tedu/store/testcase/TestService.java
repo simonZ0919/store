@@ -30,6 +30,38 @@ public class TestService {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
+	}
+	
+	@Test
+	public void changeInfo() {
+		try {
+			User user = new User();
+			user.setId(5);
+			user.setGender(1);
+			user.setPhone("13800138001");
+			user.setEmail("spring@tedu.cn");
+			service.changeInfo(user);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void changeAvatar() {
+		try {
+			service.changeAvatar(2, "abc/test.jpg");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void getById() {
+		try {
+			User user=service.getById(1);
+			System.err.println(user.toString());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }
