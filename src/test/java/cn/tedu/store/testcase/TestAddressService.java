@@ -22,6 +22,8 @@ public class TestAddressService {
 		Address address=new Address();
 		address.setUid(1);
 		address.setName("Bob");
-		service.create("admin", address);
+		address.setProvince("310000");
+		address.setCity("310100");
+		System.err.println(service.create("admin", address));
 	}
 }

@@ -26,6 +26,8 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 		// add to include/exclude list
 		includePath.add("/user/**");
 		includePath.add("/web/**");
+		includePath.add("/address/**");
+		
 		excludePath.add("/user/reg.do");
 		excludePath.add("/user/login.do");
 		excludePath.add("/web/login.html");
