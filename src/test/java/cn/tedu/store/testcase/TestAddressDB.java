@@ -8,18 +8,25 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import cn.tedu.store.entity.Address;
 import cn.tedu.store.mapper.AddressMapper;
-import cn.tedu.store.mapper.DistrictMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TestAddressDB {
 	@Autowired
-	DistrictMapper mapper;
+	AddressMapper mapper;
 	
 	@Test
-	public void find() {
-		System.out.println(mapper.findByCode("110108"));
-		System.out.println(mapper.findByParent("310000"));
+	public void addnew() {
+		Address address=new Address();
+		address.setUid(1);
+		address.setName("Marry");
+		System.err.println(mapper.addNew(address));
 	}
 	
+	@Test 
+	public void countAddress() {
+		System.err.println(mapper.countAddress(1));
+	}
+	
+
 }
