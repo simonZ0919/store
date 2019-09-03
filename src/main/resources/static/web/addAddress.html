@@ -159,17 +159,23 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label"><span style="color: red;">*</span>省/直辖市：</label>
 								<div class="col-md-3">
-									<select class="form-control" data-province="---- 选择省 ----" id="receiverState"></select>
+									<select name="province" class="form-control"  id="province">
+										<option value="0">--- 请选择 ---</option>
+									</select>
 								</div>
 								<label class="col-md-2 control-label"><span style="color: red;">*</span>城市：</label>
 								<div class="col-md-3">
-									<select class="form-control" data-city="---- 选择市 ----" id="receiverCity"></select>
+									<select name="city" class="form-control" id="city">
+										<option value="0">--- 请选择 ---</option>
+									</select>
 								</div>
 							</div>
 							<div class="form-group ">
 								<label class="col-md-2 control-label"><span style="color: red;">*</span>区县：</label>
 								<div class="col-md-3">
-									<select class="form-control" data-district="---- 选择区 ----" id="receiverDistrict"></select>
+									<select name="area" class="form-control" id="area">
+										<option value="0">--- 请选择 ---</option>
+									</select>
 								</div>
 								<label class="col-md-2 control-label">邮政编码：</label>
 							<div class="col-md-3">
@@ -296,25 +302,87 @@
 		<script type="text/javascript">
 			/* get province list  */
 			function getProvinceList() {
-				var url = "../district/list";
-				var data = "parent=86";
+				/* clear options before new loading */
+				$("#province").empty();
+				/* add default option  */
+				$("#province").append('<option value="0">--- 请选择 ---</option>');
+				var url = "../district/list/86";
 				$.ajax({
 					"url" : url,
-					"data" : data,
 					"type" : "POST",
 					"datatype" : "json",
 					"success" : function(json) {
 						var list=json.data;
 						for (var i = 0; i < list.length; i++) {
-
+							/* <option value="code">name</option> */
+							var opt='<option value="'+list[i].code+'">'+list[i].name+'</option>';
+							// append entry to list
+							$("#province").append(opt);
 						}
 					}
 				});
 			}
 			
+			/* load city list */
+			function getCityList() {
+				$("#city").empty();
+				$("#city").append('<option value="0">--- 请选择 ---</option>');
+				
+				/* get selected province */
+				var code=$("#province").val();
+				/* if no option selected, return */
+				if(code==0){
+					return;
+				}
+				var url = "../district/list/"+code;
+				$.ajax({
+					"url" : url,
+					"type" : "POST",
+					"datatype" : "json",
+					"success" : function(json) {
+
+						var list=json.data;
+						for (var i = 0; i < list.length; i++) {
+							var opt='<option value="'+list[i].code+'">'+list[i].name+'</option>';
+							$("#city").append(opt);
+						}
+					}
+				});
+			}
+			
+			/* load city list */
+			function getAreaList() {
+				$("#area").empty();
+				$("#area").append('<option value="0">--- 请选择 ---</option>');
+			
+				var code=$("#city").val();
+				if(code==0){
+					return;
+				}
+				var url = "../district/list/"+code;
+				$.ajax({
+					"url" : url,
+					"type" : "POST",
+					"datatype" : "json",
+					"success" : function(json) {
+						var list=json.data;
+						for (var i = 0; i < list.length; i++) {
+							var opt='<option value="'+list[i].code+'">'+list[i].name+'</option>';
+							$("#area").append(opt);
+						}
+					}
+				});
+			}
 			/* load page */
 			$(document).ready(function () {
-				
+				getProvinceList();
+				/* change  event of select */
+				$("#province").change(function(){
+					getCityList();
+				})
+				$("#city").change(function(){
+					getAreaList();
+				})
 			})
 		
 			$("#submitBtn").click(function() {
