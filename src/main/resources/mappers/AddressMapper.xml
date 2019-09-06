@@ -26,8 +26,24 @@
 		)
 	</insert>
 	
+	<!--Integer updateNonDefault(Integer uid)  -->
+	<update id="updateNonDefault">
+		UPDATE t_address SET is_default=0 WHERE uid=#{uid}
+	</update>
+	
+	<!-- Integer updateDefault(Integer id)  -->
+	<update id="updateDefault">
+		UPDATE t_address SET is_default=1 WHERE id=#{id}
+	</update>
+	
 	<!-- Integer countAddress(Integer uid) -->
 	<select id="countAddress" resultType="java.lang.Integer">
 		SELECT COUNT(id) FROM t_address WHERE uid=#{uid}
+	</select>
+	
+	<!-- List<Address>findById(Integer uid) -->
+	<select id="findById" resultType="cn.tedu.store.entity.Address">
+		SELECT id,name,district,address,tag, is_default AS isDefault
+		FROM t_address WHERE uid=#{uid}
 	</select>
 </mapper>

@@ -1,5 +1,7 @@
 package cn.tedu.store.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +30,14 @@ public class AddressController extends BaseController {
 		service.create(username, address);
 		return new ResponseResult<Void>(SUCCESS);
 		
+	}
+	
+	@RequestMapping("/list")
+	public ResponseResult<List<Address>> getListByUid(HttpSession session){
+		// get id
+		Integer uid=getIdFromSession(session);
+		// get list of address
+		List<Address> list=service.getListByUid(uid);
+		return new ResponseResult<List<Address>>(SUCCESS,list);
 	}
 }

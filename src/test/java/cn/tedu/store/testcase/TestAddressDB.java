@@ -28,5 +28,10 @@ public class TestAddressDB {
 		System.err.println(mapper.countAddress(1));
 	}
 	
+	@Test 
+	public void findById() {
+		System.err.println(mapper.findById(7));
+	}
+	
 
 }

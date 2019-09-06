@@ -325,8 +325,11 @@
 			
 			/* load city list */
 			function getCityList() {
+				/* clear city/area list  */
 				$("#city").empty();
 				$("#city").append('<option value="0">--- 请选择 ---</option>');
+				$("#area").empty();
+				$("#area").append('<option value="0">--- 请选择 ---</option>');
 				
 				/* get selected province */
 				var code=$("#province").val();

@@ -1,5 +1,7 @@
 package cn.tedu.store.service;
 
+import java.util.List;
+
 import cn.tedu.store.entity.Address;
 import cn.tedu.store.exception.InsertException;
 
@@ -12,4 +14,11 @@ public interface IAddressService {
 	 * @throws InsertException
 	 */
 	Address create(String username,Address address) throws InsertException;
+	
+	/**
+	 * get address by id
+	 * @param uid
+	 * @return found addresses
+	 */
+	List<Address> getListByUid(Integer uid);
 }

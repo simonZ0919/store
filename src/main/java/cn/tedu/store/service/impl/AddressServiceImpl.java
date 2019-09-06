@@ -1,6 +1,7 @@
 package cn.tedu.store.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class AddressServiceImpl implements IAddressService {
 		return address;
 	}
 	
+	@Override
+	public List<Address> getListByUid(Integer uid) {
+		return findByUid(uid);
+	}
+	
 	private void addNew(Address address) {
 		Integer rows=mapper.addNew(address);
 		if(rows!=1) {
@@ -60,9 +66,13 @@ public class AddressServiceImpl implements IAddressService {
 		District c=dService.getByCode(city);
 		District a=dService.getByCode(area);
 		
-		province=p!=null?p.getCode():null;
-		city=c!=null?c.getCode():null;
-		area=a!=null?a.getCode():null;
+		province=p!=null?p.getName():null;
+		city=c!=null?c.getName():null;
+		area=a!=null?a.getName():null;
 		return province+","+city+","+area;
+	}
+	
+	private List<Address> findByUid(Integer uid) {
+		return mapper.findById(uid);
 	}
 }
