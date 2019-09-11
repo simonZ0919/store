@@ -20,11 +20,18 @@ public interface AddressMapper {
 	Integer countAddress(Integer uid);
 	
 	/**
-	 * get address by id
+	 * get list of address by user id
 	 * @param uid
-	 * @return found addresses
+	 * @return found list of addresses
 	 */
-	List<Address>findById(Integer uid);
+	List<Address>findByUid(Integer uid);
+	
+	/**
+	 * find address by id
+	 * @param id address id 
+	 * @return found address
+	 */
+	Address findById(Integer id);
 	
 	/**
 	 * update nondefault

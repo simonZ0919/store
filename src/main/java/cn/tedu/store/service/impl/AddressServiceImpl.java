@@ -5,10 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.tedu.store.entity.Address;
 import cn.tedu.store.entity.District;
+import cn.tedu.store.exception.AccessDeniedException;
+import cn.tedu.store.exception.AddressNotFoundException;
 import cn.tedu.store.exception.InsertException;
+import cn.tedu.store.exception.UpdateException;
 import cn.tedu.store.mapper.AddressMapper;
 import cn.tedu.store.service.IAddressService;
 import cn.tedu.store.service.IDistrictService;
@@ -38,6 +42,22 @@ public class AddressServiceImpl implements IAddressService {
 		return address;
 	}
 	
+	// for transaction
+	@Override
+	@Transactional
+	public void setDefault(Integer uid, Integer id) {
+		Address data=findById(id);
+		if (data==null) {
+			throw new AddressNotFoundException("address not found");
+		}
+		
+		if (data.getUid()!=uid) {
+			throw new AccessDeniedException("fail to verify data");
+		}
+		updateNonDefault(uid);
+		updateDefault(id);
+	}
+	
 	@Override
 	public List<Address> getListByUid(Integer uid) {
 		return findByUid(uid);
@@ -49,6 +69,21 @@ public class AddressServiceImpl implements IAddressService {
 			throw new InsertException("fail to add address");
 		}
 	}
+	
+	private void updateNonDefault(Integer uid) {
+		Integer rows=mapper.updateNonDefault(uid);
+		if(rows<1) {
+			throw new UpdateException("fail to reset default");
+		}
+	}
+	
+	private void updateDefault(Integer id) {
+		Integer rows=mapper.updateDefault(id);
+		if(rows!=1) {
+			throw new UpdateException("fail to set default");
+		}
+	}
+	
 	
 	private Integer countAddress(Integer uid) {
 		return mapper.countAddress(uid);
@@ -73,6 +108,11 @@ public class AddressServiceImpl implements IAddressService {
 	}
 	
 	private List<Address> findByUid(Integer uid) {
-		return mapper.findById(uid);
+		return mapper.findByUid(uid);
 	}
+	
+	private Address findById(Integer id){
+		return mapper.findById(id);
+	}
+
 }

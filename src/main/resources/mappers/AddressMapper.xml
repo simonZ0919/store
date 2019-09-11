@@ -41,9 +41,15 @@
 		SELECT COUNT(id) FROM t_address WHERE uid=#{uid}
 	</select>
 	
-	<!-- List<Address>findById(Integer uid) -->
+	<!-- 	List<Address>findByUid(Integer uid) -->
+	<select id="findByUid" resultType="cn.tedu.store.entity.Address">
+		SELECT id,name,district,address,tag, phone, is_default AS isDefault
+		FROM t_address WHERE uid=#{uid} 
+		ORDER BY is_default DESC, modified_time DESC
+	</select>
+	
+	<!-- 	Address findById(Integer id) -->
 	<select id="findById" resultType="cn.tedu.store.entity.Address">
-		SELECT id,name,district,address,tag, is_default AS isDefault
-		FROM t_address WHERE uid=#{uid}
+		SELECT uid FROM t_address WHERE id=#{id}
 	</select>
 </mapper>

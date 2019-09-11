@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.tedu.store.entity.ResponseResult;
+import cn.tedu.store.exception.AccessDeniedException;
+import cn.tedu.store.exception.AddressNotFoundException;
 import cn.tedu.store.exception.DuplicateKeyException;
 import cn.tedu.store.exception.FileEmptyException;
 import cn.tedu.store.exception.FileSizeOutOfBoundException;
@@ -26,10 +28,14 @@ public abstract class BaseController {
 		Integer state=null;
 		if (e instanceof DuplicateKeyException) {
 			state=400;
-		} else if (e instanceof UserNotFoundException  ) {
+		}else if (e instanceof UserNotFoundException  ) {
 			state=401;
 		}else if (e instanceof PasswordNotMatchException) {
 			state=402;
+		}else if (e instanceof AddressNotFoundException  ) {
+			state=403;
+		}else if (e instanceof AccessDeniedException) {
+			state=404;
 		}else if (e instanceof InsertException) {
 			state=500;
 		}else if (e instanceof UpdateException) {

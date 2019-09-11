@@ -21,4 +21,11 @@ public interface IAddressService {
 	 * @return found addresses
 	 */
 	List<Address> getListByUid(Integer uid);
+	
+	/**
+	 * set default address
+	 * @param uid userid
+	 * @param id address id
+	 */
+	 void setDefault(Integer uid, Integer id);
 }

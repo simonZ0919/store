@@ -30,7 +30,7 @@ public class TestAddressDB {
 	
 	@Test 
 	public void findById() {
-		System.err.println(mapper.findById(7));
+		System.err.println(mapper.findByUid(7));
 	}
 	
 

@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,5 +41,13 @@ public class AddressController extends BaseController {
 		// get list of address
 		List<Address> list=service.getListByUid(uid);
 		return new ResponseResult<List<Address>>(SUCCESS,list);
+	}
+	
+	@GetMapping("/default/{id}")
+	public ResponseResult<Void> setDefault(HttpSession session, 
+			@PathVariable("id") Integer id){
+		Integer uid=getIdFromSession(session);
+		service.setDefault(uid, id);
+		return new ResponseResult<Void>(SUCCESS);
 	}
 }
