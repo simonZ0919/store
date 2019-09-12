@@ -34,6 +34,13 @@ public interface AddressMapper {
 	Address findById(Integer id);
 	
 	/**
+	 * find last modified address
+	 * @param uid
+	 * @return address
+	 */
+	Address findLastModified(Integer uid);
+	
+	/**
 	 * update nondefault
 	 * @param uid user id
 	 * @return affected rows
@@ -46,4 +53,11 @@ public interface AddressMapper {
 	 * @return affected rows
 	 */
 	Integer updateDefault(Integer id);
+	
+	/**
+	 * delete user by id 
+	 * @param id
+	 * @return affected rows
+	 */
+	Integer deleteById(Integer id);
 }

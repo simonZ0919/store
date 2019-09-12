@@ -33,5 +33,13 @@ public class TestAddressDB {
 		System.err.println(mapper.findByUid(7));
 	}
 	
+	@Test
+	public void findLastModified() {
+		System.err.println(mapper.findLastModified(1));
+	}
 
+	@Test 
+	public void deleteById() {
+		System.err.println(mapper.deleteById(5));
+	}
 }

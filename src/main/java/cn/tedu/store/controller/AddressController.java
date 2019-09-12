@@ -50,4 +50,12 @@ public class AddressController extends BaseController {
 		service.setDefault(uid, id);
 		return new ResponseResult<Void>(SUCCESS);
 	}
+	
+	@GetMapping("/delete/{id}")
+	public ResponseResult<Void> deleteById(HttpSession session, 
+			@PathVariable("id") Integer id){
+		Integer uid=getIdFromSession(session);
+		service.delete(uid, id);
+		return new ResponseResult<Void>(SUCCESS);
+	}
 }

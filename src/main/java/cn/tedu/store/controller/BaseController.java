@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.tedu.store.entity.ResponseResult;
 import cn.tedu.store.exception.AccessDeniedException;
 import cn.tedu.store.exception.AddressNotFoundException;
+import cn.tedu.store.exception.DeleteException;
 import cn.tedu.store.exception.DuplicateKeyException;
 import cn.tedu.store.exception.FileEmptyException;
 import cn.tedu.store.exception.FileSizeOutOfBoundException;
@@ -40,6 +41,8 @@ public abstract class BaseController {
 			state=500;
 		}else if (e instanceof UpdateException) {
 			state=501;
+		}else if (e instanceof DeleteException) {
+			state=502;
 		}else if (e instanceof FileEmptyException) {
 			state=600;
 		}else if (e instanceof FileSizeOutOfBoundException) {

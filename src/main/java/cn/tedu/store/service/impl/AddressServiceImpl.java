@@ -11,6 +11,7 @@ import cn.tedu.store.entity.Address;
 import cn.tedu.store.entity.District;
 import cn.tedu.store.exception.AccessDeniedException;
 import cn.tedu.store.exception.AddressNotFoundException;
+import cn.tedu.store.exception.DeleteException;
 import cn.tedu.store.exception.InsertException;
 import cn.tedu.store.exception.UpdateException;
 import cn.tedu.store.mapper.AddressMapper;
@@ -63,6 +64,35 @@ public class AddressServiceImpl implements IAddressService {
 		return findByUid(uid);
 	}
 	
+	@Override
+	@Transactional
+	public void delete(Integer uid, Integer id) throws DeleteException {
+		// find address by id
+		Address data=findById(id);
+		if(data==null) {
+			throw new AddressNotFoundException("address not found");
+		}
+		
+		// if uid exist
+		if(data.getUid()!=uid) {
+			throw new AccessDeniedException("fail to verity data");
+		}
+		
+		// delete address
+		deleteById(id);
+		// for rest of address
+		if (countAddress(uid)>0) {
+			// if delete address is default 
+			if(data.getIsDefault()==1) {
+				// find id of last modified
+				Integer lastModifiedID=findLastModified(uid).getId();
+				// set last-modified address to default
+				setDefault(	uid, lastModifiedID);
+			}
+		}
+	}
+	
+	
 	private void addNew(Address address) {
 		Integer rows=mapper.addNew(address);
 		if(rows!=1) {
@@ -114,5 +144,18 @@ public class AddressServiceImpl implements IAddressService {
 	private Address findById(Integer id){
 		return mapper.findById(id);
 	}
+	
+	private Address findLastModified(Integer uid) {
+		return mapper.findLastModified(uid);
+	}
+	
+	private void deleteById(Integer id) {
+		Integer rows=mapper.deleteById(id);
+		if(rows!=1) {
+			throw new DeleteException("fail to delete address");
+		}
+	}
+
+
 
 }

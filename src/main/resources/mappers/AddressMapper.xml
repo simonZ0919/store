@@ -50,6 +50,18 @@
 	
 	<!-- 	Address findById(Integer id) -->
 	<select id="findById" resultType="cn.tedu.store.entity.Address">
-		SELECT uid FROM t_address WHERE id=#{id}
+		SELECT uid, is_default AS isDefault 
+		FROM t_address WHERE id=#{id}
 	</select>
+	
+	<!-- Address findLastModified(Integer uid) -->
+	<select id="findLastModified" resultType="cn.tedu.store.entity.Address">
+		SELECT id FROM t_address WHERE uid=#{uid} 
+		ORDER BY modified_time DESC LIMIT 0,1
+	</select>
+	
+	<!-- Integer deleteById(Integer id) -->
+	<delete id="deleteById">
+		DELETE FROM t_address WHERE id=#{id}
+	</delete>
 </mapper>
