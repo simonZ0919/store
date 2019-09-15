@@ -17,11 +17,19 @@ public interface IAddressService {
 	Address create(String username,Address address) throws InsertException;
 	
 	/**
-	 * get address by id
+	 * get address by user id
 	 * @param uid
 	 * @return found addresses
 	 */
 	List<Address> getListByUid(Integer uid);
+	
+	/**
+	 * get address by id
+	 * @param id
+	 * @return found address
+	 */
+	Address getById(Integer id);
+
 	
 	/**
 	 * set default address

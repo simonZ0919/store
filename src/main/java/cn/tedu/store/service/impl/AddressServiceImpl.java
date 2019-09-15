@@ -65,6 +65,11 @@ public class AddressServiceImpl implements IAddressService {
 	}
 	
 	@Override
+	public Address getById(Integer id) {
+		return findById(id);
+	}
+	
+	@Override
 	@Transactional
 	public void delete(Integer uid, Integer id) throws DeleteException {
 		// find address by id
@@ -155,7 +160,4 @@ public class AddressServiceImpl implements IAddressService {
 			throw new DeleteException("fail to delete address");
 		}
 	}
-
-
-
 }

@@ -27,11 +27,15 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 		includePath.add("/user/**");
 		includePath.add("/web/**");
 		includePath.add("/address/**");
+		includePath.add("/cart/**");
+		includePath.add("/order/**");
 		
 		excludePath.add("/user/reg.do");
 		excludePath.add("/user/login.do");
 		excludePath.add("/web/login.html");
 		excludePath.add("/web/register.html");
+		excludePath.add("/web/index.html");
+		excludePath.add("/web/product.html");
 		
 		// register interceptor
 		registry.addInterceptor(new LoginInterceptor())

@@ -11,7 +11,7 @@ import cn.tedu.store.service.IAddressService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestAddressService {
+public class TestOrderService {
 	@Autowired
 	private IAddressService service;
 

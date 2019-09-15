@@ -50,7 +50,7 @@
 	
 	<!-- 	Address findById(Integer id) -->
 	<select id="findById" resultType="cn.tedu.store.entity.Address">
-		SELECT uid, is_default AS isDefault 
+		SELECT uid, name,phone, district, address, is_default AS isDefault 
 		FROM t_address WHERE id=#{id}
 	</select>
 	
