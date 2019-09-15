@@ -24,4 +24,9 @@ public class TestOrderService {
 		address.setCity("310100");
 		System.err.println(service.create("admin", address));
 	}
+	
+	@Test
+	public void getById() {
+		System.out.println(service.getById(1));
+	}
 }

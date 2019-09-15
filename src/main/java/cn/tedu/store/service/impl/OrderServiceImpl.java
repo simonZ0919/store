@@ -18,6 +18,7 @@ import cn.tedu.store.service.IAddressService;
 import cn.tedu.store.service.ICartService;
 import cn.tedu.store.service.IOrderService;
 import cn.tedu.store.vo.CartVO;
+import cn.tedu.store.vo.OrderVO;
 
 @Service
 public class OrderServiceImpl implements IOrderService {
@@ -86,7 +87,7 @@ public class OrderServiceImpl implements IOrderService {
 	    // 遍历orderItems
 		for (OrderItem orderItem : orderItems) {
 			// item属性：oid
-			orderItem.setId(order.getId());
+			orderItem.setOid(order.getId());
 			// 插入订单商品数据
 			insertOrderItem(orderItem);
 		}     
@@ -94,6 +95,10 @@ public class OrderServiceImpl implements IOrderService {
 		return order;
 	}
 
+	@Override
+	public OrderVO getById(Integer id) {
+		return findById(id);
+	}
 	
 	private void insertOrder(Order order) {
 		Integer rows=mapper.insertOrder(order);
@@ -107,5 +112,9 @@ public class OrderServiceImpl implements IOrderService {
 		if(rows!=1) {
 			throw new InsertException("fail to add order item");
 		}
+	}
+	
+	private OrderVO findById(Integer id) {
+		return mapper.findById(id);
 	}
 }

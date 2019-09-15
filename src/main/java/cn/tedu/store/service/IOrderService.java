@@ -2,6 +2,7 @@ package cn.tedu.store.service;
 
 import cn.tedu.store.entity.Order;
 import cn.tedu.store.exception.InsertException;
+import cn.tedu.store.vo.OrderVO;
 
 public interface IOrderService {
 	/**
@@ -14,4 +15,11 @@ public interface IOrderService {
 	 */
 	Order createOrder(Integer uid, String username,
 		    Integer addressId, Integer[] cartIds) throws InsertException;
+	
+	/**
+	 * find order detail by id
+	 * @param id
+	 * @return detail of order
+	 */
+	OrderVO getById(Integer id);
 }
